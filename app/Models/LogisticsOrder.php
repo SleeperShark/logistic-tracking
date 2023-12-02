@@ -11,11 +11,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
- * @property string $sno
- * @property int    $tracking_status
- * @property int    $recipient_id
- * @property int    $current_location_id
- * @property Carbon $estimated_delivery
+ * @property string          $sno
+ * @property LogisticsStatus $tracking_status
+ * @property int             $recipient_id
+ * @property int             $current_location_id
+ * @property Carbon          $estimated_delivery
  *
  * @property-read Collection<LogisticsItem> $items
  * @property-read Location                  $currentLocation

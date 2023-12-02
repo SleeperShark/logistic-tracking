@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
- * @property int $order_id
- * @property int $status
- * @property int $location_id
+ * @property int             $id
+ * @property int             $order_id
+ * @property LogisticsStatus $status
+ * @property int             $location_id
  *
  * @property-read LogisticsOrder $order
  * @property-read Location       $location

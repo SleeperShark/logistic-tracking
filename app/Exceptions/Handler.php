@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -25,6 +27,44 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+        $this->renderable(function (Throwable $e) {
+            $errorContent = [
+                'status' => 'error',
+                'data'   => null,
+            ];
+
+            switch (get_class($e)) {
+                case NotFoundHttpException::class:
+                    $statusCode = 404;
+                    $error      = [
+                        'code'    => $statusCode,
+                        'message' => $e->getMessage(),
+                    ];
+                    
+                    break;
+                case ValidationException::class:
+                    /** @var ValidationException $e */
+                    $statusCode = 422;
+                    $error      = [
+                        'code'     => $statusCode,
+                        'messages' => 'validationError',
+                        'errors'   => $e->errors(),
+                    ];
+
+                    break;
+                default:
+                    $statusCode = 500;
+                    $error      = [
+                        'code'    => 500,
+                        'message' => 'unknownError',
+                    ];
+            }
+
+            $errorContent['error'] = $error;
+
+            return response($errorContent, $statusCode);
         });
     }
 }
