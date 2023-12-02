@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Location;
-use App\Models\Recipient;
 use App\Enums\LogisticsStatus;
+use App\Models\Location;
 use App\Models\LogisticsOrder;
-use Illuminate\Support\Carbon;
+use App\Models\Recipient;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Carbon;
 
 class LogisticsOrderFactory extends Factory
 {
@@ -40,6 +40,7 @@ class LogisticsOrderFactory extends Factory
     {
         $timestamp = $date->timestamp;
         $series    = str_pad(random_int(1, 9999), 4, 0, STR_PAD_LEFT);
+
         return str_pad($timestamp . $series, 16, 0, STR_PAD_LEFT);
     }
 
@@ -74,8 +75,9 @@ class LogisticsOrderFactory extends Factory
             return LogisticsStatus::DELIVERED;
         } elseif ($rand == 49) {
             return LogisticsStatus::RETURNED_TO_SENDER;
-        } else {
-            return LogisticsStatus::EXCEPTION;
         }
+
+        return LogisticsStatus::EXCEPTION;
+
     }
 }

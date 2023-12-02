@@ -104,12 +104,12 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        array_walk($locations, function(array $location) {
+        array_walk($locations, function (array $location) {
             Location::create($location);
-            return;
+
         });
     }
-    
+
     private function seedRecipients(): void
     {
         $recipients = [
@@ -205,9 +205,9 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
-        array_walk($recipients, function(array $recipient) {
+        array_walk($recipients, function (array $recipient) {
             Recipient::create($recipient);
-            return;
+
         });
     }
 }

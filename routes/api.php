@@ -1,13 +1,13 @@
 <?php
 
-use App\Models\Location;
-use Illuminate\Http\Request;
-use App\Models\LogisticsOrder;
 use App\Http\Requests\FakeRequest;
-use Illuminate\Support\Facades\Route;
 use App\Http\Requests\SnoQueryRequest;
 use App\Http\Resources\LogisticsOrderResource;
+use App\Models\Location;
+use App\Models\LogisticsOrder;
 use Illuminate\Database\UniqueConstraintViolationException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /*
@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('/', function(SnoQueryRequest $request) {
+Route::get('/', function (SnoQueryRequest $request) {
     $sno = $request->validated('sno');
 
     /** @var ?LogisticsOrder */
@@ -52,6 +52,7 @@ Route::get('/fake', function (FakeRequest $request) {
         while (true) {
             try {
                 $order = LogisticsOrder::factory()->create();
+
                 break;
             } catch (UniqueConstraintViolationException) {
                 // sno duplication

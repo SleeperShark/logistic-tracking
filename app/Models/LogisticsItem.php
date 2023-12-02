@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Enums\LogisticsStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 /**
  * @property int             $id
@@ -21,7 +21,7 @@ class LogisticsItem extends Model
     use HasFactory;
 
     protected $table = 'logistics_items';
-    
+
     protected $fillable = [
         'order_id',
         'status',

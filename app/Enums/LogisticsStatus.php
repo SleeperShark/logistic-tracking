@@ -8,26 +8,26 @@ use BenSampo\Enum\Enum;
 final class LogisticsStatus extends Enum
 {
     #[Description('Created')]
-    const CREATED = 1;
+    public const CREATED = 1;
 
     #[Description('Package Received')]
-    const PACKAGE_RECEIVED = 2;
+    public const PACKAGE_RECEIVED = 2;
 
     #[Description('In Transit')]
-    const IN_TRANSIT = 3;
+    public const IN_TRANSIT = 3;
 
     #[Description('Out for Delivery')]
-    const OUT_FOR_DELIVERY = 4;
+    public const OUT_FOR_DELIVERY = 4;
 
     #[Description('Delivery Attempted')]
-    const DELIVERY_ATTEMPTED = 5;
+    public const DELIVERY_ATTEMPTED = 5;
 
     #[Description('Delivered')]
-    const DELIVERED = 6;
+    public const DELIVERED = 6;
 
     #[Description('Returned to Sender')]
-    const RETURNED_TO_SENDER  = 7;
+    public const RETURNED_TO_SENDER = 7;
 
     #[Description('Exception')]
-    const EXCEPTION = 8;
+    public const EXCEPTION = 8;
 }
