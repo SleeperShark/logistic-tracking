@@ -1,10 +1,13 @@
 <?php
 
+use App\Models\Location;
 use Illuminate\Http\Request;
+use App\Models\LogisticsOrder;
+use App\Http\Requests\FakeRequest;
+use Illuminate\Support\Facades\Route;
 use App\Http\Requests\SnoQueryRequest;
 use App\Http\Resources\LogisticsOrderResource;
-use App\Models\LogisticsOrder;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /*
@@ -36,4 +39,40 @@ Route::get('/', function(SnoQueryRequest $request) {
     throw_if(is_null($order), new NotFoundHttpException('Tracking number not found'));
 
     return new LogisticsOrderResource($order);
+});
+
+Route::get('/fake', function (FakeRequest $request) {
+    $num = $request->validated('num');
+
+    $orders      = [];
+    $locationsId = Location::pluck('id')->toArray();
+
+    for ($i = 0; $i < $num; $i++) {
+        /** @var LogisticsOrder */
+        while (true) {
+            try {
+                $order = LogisticsOrder::factory()->create();
+                break;
+            } catch (UniqueConstraintViolationException) {
+                // sno duplication
+                continue;
+            }
+        }
+
+        for ($j = 0; $j < random_int(1, 5); $j++) {
+            $order->items()->create([
+                'status'      => $order->tracking_status,
+                'location_id' => array_rand($locationsId),
+            ]);
+        }
+
+        array_push($orders, $order);
+    }
+
+    $result = array_map(fn (LogisticsOrder $order) => [
+        'sno'             => $order->sno,
+        'tracking_status' => $order->tracking_status->description,
+    ], $orders);
+
+    return response($result);
 });
