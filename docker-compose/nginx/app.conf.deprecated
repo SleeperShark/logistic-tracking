@@ -2,10 +2,10 @@ server {
     listen 80;
     index index.php index.html;
 
-    listen 443 default_server ssl;
+    # listen 443 default_server ssl;
 
-    ssl_certificate      /ssl/logistics-tracking.sleeper-shark-sre.online/certificate.crt;
-    ssl_certificate_key  /ssl/logistics-tracking.sleeper-shark-sre.online/private.key;
+    # ssl_certificate      /ssl/logistics-tracking.sleeper-shark-sre.online/certificate.crt;
+    # ssl_certificate_key  /ssl/logistics-tracking.sleeper-shark-sre.online/private.key;
 
     server_name logistics-tracking.sleeper-shark-sre.online;
 
@@ -23,6 +23,7 @@ server {
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
         fastcgi_param PATH_INFO $fastcgi_path_info;
     }
+
     location / {
         try_files $uri $uri/ /index.php?$query_string;
         gzip_static on;

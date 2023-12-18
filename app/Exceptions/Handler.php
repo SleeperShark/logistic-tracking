@@ -59,6 +59,8 @@ class Handler extends ExceptionHandler
                     $error      = [
                         'code'    => 500,
                         'message' => 'unknownError',
+                        'error'   => $e->getMessage(),
+                        'trace'   => $e->getTrace(),
                     ];
             }
 

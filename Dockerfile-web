@@ -1,0 +1,56 @@
+FROM composer:lts as deps
+
+WORKDIR /app
+
+# pre-install composer pacakge as cache source for final app image
+RUN --mount=type=bind,source=composer.json,target=composer.json \
+    --mount=type=bind,source=composer.lock,target=composer.lock \
+    --mount=type=cache,target=/tmp/cache \
+    composer install --no-interaction --no-scripts
+
+# -------------------------------------------------------s
+
+FROM php:8.3-fpm as final
+
+# download package requierd in laravel app execution
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip && \
+    # clear installation cache
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Download php extension and enable redis
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd && \
+    pecl install redis && \
+    docker-php-ext-enable redis
+
+# 從既有的 image 取得 package manager: composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u 1000 -d /home/app-user app-user
+# create home directory and global composer directory for app-user
+RUN mkdir -p /home/app-user/.composer && \
+    chown -R app-user:app-user /home/app-user
+
+# Set working directory
+WORKDIR /var/www
+
+# copy web app
+COPY . /var/www
+# copy laravel dependency
+COPY --from=deps app/vendor/ /var/www/vendor
+
+# change directory owner to app-user in order to execute following command
+RUN chown -R app-user:app-user /var/www
+
+# switch to app-user
+USER app-user
+
+# create composer dump file
+RUN composer dump-autoload

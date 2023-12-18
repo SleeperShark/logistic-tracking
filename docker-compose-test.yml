@@ -1,0 +1,54 @@
+version: "3.7"
+services:
+  app:
+    image: sleepershark/sre-web:latest
+    container_name: app
+    restart: unless-stopped
+    working_dir: /var/www/
+    env_file:
+      - .env.docker_app
+    networks:
+      - app-network
+    depends_on:
+      - mysql
+      - redis
+      - nginx
+
+  nginx:
+    image: logistics-tracking-nginx:latest
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+    networks:
+      - app-network
+
+  mysql:
+    image: sleepershark/sre-db:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: slvsjfu7olee7be4hhido
+      MYSQL_ROOT_HOST: "%"
+      MYSQL_DATABASE: laravel
+    ports:
+      - 3306:3306
+    networks:
+      - app-network
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - 6379:6379
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      retries: 3
+      timeout: 5s
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

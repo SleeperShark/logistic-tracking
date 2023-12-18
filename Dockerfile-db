@@ -1,0 +1,7 @@
+FROM mysql/mysql-server:8.0
+
+# 設立 mysql 的環境變數：預設使用的 database laravel
+ENV MYSQL_DATABASE laravel
+
+# 將 sql script 複製到 init.d，在 db init 時會運行腳本
+COPY ./logistics-tracking-init.sql /docker-entrypoint-initdb.d/
